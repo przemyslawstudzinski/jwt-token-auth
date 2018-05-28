@@ -23,7 +23,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
+// 'user' is reversed word for PostgreSQL
+@Table(name = "app_user")
 public class User extends BaseEntity implements UserDetails {
 
   @Column(name = "username", nullable = false, unique = true)

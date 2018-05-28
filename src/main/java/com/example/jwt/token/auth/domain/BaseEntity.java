@@ -20,7 +20,8 @@ public abstract class BaseEntity {
   @Id
   @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
   @GeneratedValue(generator = "uuid-gen")
-  @Type(type = "uuid-char")
+  // 'uuid-char' for MySQL
+  @Type(type = "pg-uuid")
   @Column(name = "id", updatable = false, nullable = false)
   @Getter
   @Setter

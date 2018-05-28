@@ -4,9 +4,13 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath "gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.19.2"
 	}
 }
 
@@ -16,6 +20,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'com.palantir.docker'
 
 
 group = 'com.example'
@@ -33,6 +38,7 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-security:2.0.1.RELEASE'
 
 	runtime 'mysql:mysql-connector-java'
+	runtime 'org.postgresql:postgresql:42.2.2'
 
 	compile 'org.projectlombok:lombok:1.16.18'
 
@@ -58,10 +64,18 @@ checkstyle {
 	maxWarnings = 0
 }
 
-pmd {
-	toolVersion = '6.2.0'
-	consoleOutput= true
-	ignoreFailures = false
-	ruleSetFiles = files("ruleset.xml")
-	reportsDir = file("build/reports/pmd")
+//pmd {
+//	toolVersion = '6.2.0'
+//	consoleOutput= true
+//	ignoreFailures = false
+//	ruleSetFiles = files("ruleset.xml")
+//	reportsDir = file("build/reports/pmd")
+//}
+
+docker {
+	dependsOn build
+	project.file('Dockerfile')
+	name "przemyslawstudzinski/${bootJar.baseName}"
+	files bootJar.archivePath
+	buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
 }
