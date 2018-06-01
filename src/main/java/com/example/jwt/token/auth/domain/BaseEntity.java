@@ -21,6 +21,7 @@ public abstract class BaseEntity {
   @GenericGenerator(name = "uuid-gen", strategy = "uuid2")
   @GeneratedValue(generator = "uuid-gen")
   // 'uuid-char' for MySQL
+  // Additional settings = #ALTER DATABASE db charset=latin1;
   @Type(type = "pg-uuid")
   @Column(name = "id", updatable = false, nullable = false)
   @Getter
