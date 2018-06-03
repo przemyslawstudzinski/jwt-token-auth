@@ -1,4 +1,4 @@
-package com.example.jwt.token.auth.security;
+package com.example.jwt.token.auth.service;
 
 import com.example.jwt.token.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -31,7 +31,7 @@ public class TokenEndpointConfiguration extends WebSecurityConfigurerAdapter {
         .and()
         .httpBasic();
 
-    http.addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class);
+    http.addFilter(jwtAuthenticationFilter());
   }
 
   @Bean

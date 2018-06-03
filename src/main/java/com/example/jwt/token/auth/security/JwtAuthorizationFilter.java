@@ -1,7 +1,6 @@
 package com.example.jwt.token.auth.security;
 
 import static com.example.jwt.token.auth.security.SecurityConstants.HEADER_STRING;
-import static com.example.jwt.token.auth.security.SecurityConstants.SECRET;
 import static com.example.jwt.token.auth.security.SecurityConstants.TOKEN_PREFIX;
 
 import io.jsonwebtoken.Claims;
@@ -14,6 +13,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,34 +21,40 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-public class JwtTokenFilter extends BasicAuthenticationFilter {
+public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-  public JwtTokenFilter(
+  @Value("${jwt.secret.key}")
+  private String secret;
+
+  public JwtAuthorizationFilter(
       AuthenticationManager authenticationManager) {
     super(authenticationManager);
   }
 
   @Override
-  protected void doFilterInternal(HttpServletRequest req,
-      HttpServletResponse res,
-      FilterChain chain) throws IOException, ServletException {
-    String header = req.getHeader(HEADER_STRING);
+  protected void doFilterInternal(HttpServletRequest request,
+      HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+    String header = request.getHeader(HEADER_STRING);
     if (header == null || !header.startsWith(TOKEN_PREFIX)) {
-      chain.doFilter(req, res);
+      chain.doFilter(request, response);
       return;
     }
-    UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+    UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
     SecurityContextHolder.getContext().setAuthentication(authentication);
-    chain.doFilter(req, res);
+
+    chain.doFilter(request, response);
   }
 
   private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-    String token = request.getHeader(HEADER_STRING);
+    String header = request.getHeader(HEADER_STRING);
     // Parse the token.
-    if (token != null) {
+    if (header != null) {
+      String token = header.replace(TOKEN_PREFIX, "");
+
       Jws<Claims> jwsClaims = Jwts.parser()
-          .setSigningKey(SECRET)
-          .parseClaimsJws(token.replace(TOKEN_PREFIX, ""));
+          .setSigningKey(secret)
+          .parseClaimsJws(token);
 
       String username = jwsClaims.getBody().getSubject();
       List<String> scopes = jwsClaims.getBody().get("scopes", List.class);

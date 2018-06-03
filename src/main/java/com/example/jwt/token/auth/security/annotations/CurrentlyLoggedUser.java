@@ -1,4 +1,4 @@
-package com.example.jwt.token.auth.annotations;
+package com.example.jwt.token.auth.security.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

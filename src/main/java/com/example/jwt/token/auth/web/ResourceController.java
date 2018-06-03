@@ -1,7 +1,5 @@
 package com.example.jwt.token.auth.web;
 
-import com.example.jwt.token.auth.annotations.CurrentlyLoggedUser;
-import java.security.Principal;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +14,7 @@ public class ResourceController {
   @RequestMapping(value = "/create", method = RequestMethod.GET)
   @ResponseStatus(HttpStatus.OK)
   @PreAuthorize("hasAuthority('CREATE')")
-  public String create(@CurrentlyLoggedUser Principal user) {
+  public String create() {
     return "CREATED";
   }
 

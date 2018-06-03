@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
-public class LoginController {
+public class TokenController {
 
-  @RequestMapping(value = "/token", method = RequestMethod.GET)
+  @RequestMapping(value = "/token", method = RequestMethod.POST)
   public String getToken() {
-    return "Token is created";
+    return "Token has been created successfully.";
   }
 }

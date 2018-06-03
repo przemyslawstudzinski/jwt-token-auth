@@ -1,4 +1,4 @@
-package com.example.jwt.token.auth.util;
+package com.example.jwt.token.auth.util.db;
 
 import org.hibernate.dialect.PostgreSQL9Dialect;
 

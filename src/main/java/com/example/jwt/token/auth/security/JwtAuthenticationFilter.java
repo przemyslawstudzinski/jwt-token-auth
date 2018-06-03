@@ -1,8 +1,6 @@
 package com.example.jwt.token.auth.security;
 
-import static com.example.jwt.token.auth.security.SecurityConstants.EXPIRATION_TIME;
 import static com.example.jwt.token.auth.security.SecurityConstants.HEADER_STRING;
-import static com.example.jwt.token.auth.security.SecurityConstants.SECRET;
 import static com.example.jwt.token.auth.security.SecurityConstants.TOKEN_PREFIX;
 
 import com.example.jwt.token.auth.domain.User;
@@ -13,11 +11,18 @@ import java.util.Date;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
+
+  @Value("${jwt.secret.key}")
+  private String secret;
+
+  @Value("${jwt.expiration.time}")
+  private long expirationTime;
 
   public JwtAuthenticationFilter(
       AuthenticationManager authenticationManager) {
@@ -25,22 +30,21 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
   }
 
   @Override
-  protected void onSuccessfulAuthentication(HttpServletRequest req,
-      HttpServletResponse res,
-      Authentication auth) {
+  protected void onSuccessfulAuthentication(HttpServletRequest request,
+      HttpServletResponse response, Authentication authentication) {
 
-    Claims claims = Jwts.claims().setSubject(((User) auth.getPrincipal()).getUsername());
-    claims.put("scopes", ((User) auth.getPrincipal()).getAuthorities()
+    Claims claims = Jwts.claims().setSubject(((User) authentication.getPrincipal()).getUsername());
+    claims.put("scopes", ((User) authentication.getPrincipal()).getAuthorities()
             .stream()
             .map(s -> s.toString())
             .collect(Collectors.toList()));
 
     String token = Jwts.builder()
         .setClaims(claims)
-        .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-        .signWith(SignatureAlgorithm.HS512, SECRET)
+        .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+        .signWith(SignatureAlgorithm.HS512, secret)
         .compact();
 
-    res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
+    response.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
   }
 }
