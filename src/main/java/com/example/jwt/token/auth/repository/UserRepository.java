@@ -1,6 +1,6 @@
 package com.example.jwt.token.auth.repository;
 
-import com.example.jwt.token.auth.domain.User;
+import com.example.jwt.token.auth.domain.rbac.User;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;

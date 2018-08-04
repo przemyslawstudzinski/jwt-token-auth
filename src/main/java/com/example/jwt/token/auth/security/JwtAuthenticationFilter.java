@@ -3,7 +3,7 @@ package com.example.jwt.token.auth.security;
 import static com.example.jwt.token.auth.security.SecurityConstants.HEADER_STRING;
 import static com.example.jwt.token.auth.security.SecurityConstants.TOKEN_PREFIX;
 
-import com.example.jwt.token.auth.domain.User;
+import com.example.jwt.token.auth.domain.rbac.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
