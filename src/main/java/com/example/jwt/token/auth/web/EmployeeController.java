@@ -26,7 +26,7 @@ public class EmployeeController {
 
   private EmployeeMapper employeeMapper = EmployeeMapper.INSTANCE;
 
-  @RequestMapping(value = "/", method = RequestMethod.GET)
+  @RequestMapping(value = "/info", method = RequestMethod.GET)
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasAuthority('INFO')")
   public String info() {
