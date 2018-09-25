@@ -61,7 +61,7 @@ test {
 checkstyle {
 	toolVersion '8.9'
 	configFile = file("checkstyle.xml")
-	maxWarnings = 0
+	maxWarnings = 10
 }
 
 //pmd {
